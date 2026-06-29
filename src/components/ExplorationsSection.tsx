@@ -16,7 +16,6 @@ export default function ExplorationsSection() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [activeItem, setActiveItem] = useState<Exploration | null>(null);
-  const [translateY, setTranslateY] = useState<number>(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -74,7 +73,7 @@ export default function ExplorationsSection() {
     };
   }, []);
 
-  // Parallax background video scroll event listener
+  // Handle background video play/pause on viewport entry
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = true;
@@ -87,30 +86,19 @@ export default function ExplorationsSection() {
       if (!container) return;
 
       const rect = container.getBoundingClientRect();
-      const scrollY = window.scrollY;
-
-      // Check if container is in view
       const inView = rect.top < window.innerHeight && rect.bottom > 0;
-      const relativeScroll = scrollY - container.offsetTop;
 
       if (videoRef.current) {
-        if (relativeScroll > 5) {
-          // Pause/freeze playback when scrolling down into the section
+        if (inView) {
+          if (videoRef.current.paused) {
+            videoRef.current.play().catch(() => {});
+          }
+        } else {
           if (!videoRef.current.paused) {
             videoRef.current.pause();
           }
-        } else {
-          // Play when at the start of the section or in view above scrolling threshold
-          if (videoRef.current.paused && inView) {
-            videoRef.current.playbackRate = 1.6;
-            videoRef.current.play().catch(() => {});
-          }
         }
       }
-
-      // Parallax translation: calculate distance relative to section's top offset and clamp to 0+
-      const activeScroll = Math.max(0, relativeScroll);
-      setTranslateY(-activeScroll * 0.85);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -128,34 +116,33 @@ export default function ExplorationsSection() {
       ref={containerRef}
       className="relative min-h-[220vh] md:min-h-[300vh] bg-black w-full overflow-hidden select-none"
     >
-      {/* 100% Opacity Background Video with scrolling translation */}
-      <div
-        className="absolute top-0 left-0 w-full h-screen overflow-hidden z-0 pointer-events-none"
-        style={{
-          transform: `translateY(${translateY}px)`,
-          transition: "transform 0.1s ease-out",
-        }}
-      >
-        <video
-          ref={videoRef}
-          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
-          src="https://res.cloudinary.com/dyzlx6pnt/video/upload/v1782747453/b_animate_the_image__l_online-video-cutter.com_kzs1f2.mp4"
-          loop
-          muted
-          playsInline
-        />
-      </div>
-
-      {/* Seamless Edge Blenders (Gradients fading to black at top and bottom edges) */}
-      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
-
-      {/* LAYER 1: Pinned Center (z-10) */}
+      {/* LAYER 1: Pinned Center (z-10) with locked background video and pop-up transition reveal */}
       <div
         ref={pinnedContentRef}
         className="absolute inset-0 w-full h-screen flex flex-col justify-center items-center z-10 px-4 pointer-events-none"
       >
-        <div className="max-w-xl text-center flex flex-col items-center pointer-events-auto bg-black/45 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
+        {/* locked video container with pop-up transition reveal effect */}
+        <motion.div
+          initial={{ scale: 0.82, opacity: 0, borderRadius: "2.5rem" }}
+          whileInView={{ scale: 1, opacity: 1, borderRadius: "0rem" }}
+          viewport={{ once: false, margin: "-8% 0px -8% 0px" }}
+          transition={{ type: "spring", stiffness: 60, damping: 18 }}
+          className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none"
+        >
+          <video
+            ref={videoRef}
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
+            src="https://res.cloudinary.com/dyzlx6pnt/video/upload/v1782747453/b_animate_the_image__l_online-video-cutter.com_kzs1f2.mp4"
+            loop
+            muted
+            playsInline
+          />
+          {/* Seamless Edge Blenders placed directly inside the locked container for consistent blending */}
+          <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" />
+          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
+        </motion.div>
+
+        <div className="relative z-10 max-w-xl text-center flex flex-col items-center pointer-events-auto bg-black/45 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
           {/* Eyebrow */}
           <span className="text-xs text-white font-bold uppercase tracking-[0.3em] mb-4">
             Sandbox Archive

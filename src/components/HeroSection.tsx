@@ -15,7 +15,6 @@ export default function HeroSection({
   const heroRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [roleIndex, setRoleIndex] = useState<number>(0);
-  const [translateY, setTranslateY] = useState<number>(0);
 
   // Role word cycler
   useEffect(() => {
@@ -25,7 +24,7 @@ export default function HeroSection({
     return () => clearInterval(interval);
   }, []);
 
-  // Handle video playback controls on scroll and translateY translation
+  // Handle video playback controls on scroll
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = true;
@@ -50,9 +49,6 @@ export default function HeroSection({
           }
         }
       }
-
-      // Seamless scrolling translation (goes up in an animation manner)
-      setTranslateY(-scrollY * 0.85);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -97,17 +93,11 @@ export default function HeroSection({
       ref={heroRef}
       className="relative w-full h-[100dvh] flex flex-col justify-center items-start overflow-hidden bg-black text-text-primary px-6 md:px-12 lg:px-16"
     >
-      {/* 100% Opacity Background Video with scrolling translation */}
-      <div
-        className="absolute inset-0 z-0 overflow-hidden w-full h-full pointer-events-none"
-        style={{
-          transform: `translateY(${translateY}px)`,
-          transition: "transform 0.1s ease-out",
-        }}
-      >
+      {/* 100% Opacity Background Video locked to Hero section */}
+      <div className="absolute inset-0 z-0 overflow-hidden w-full h-full pointer-events-none">
         <video
           ref={videoRef}
-          src="https://flow-content.google/video/4d726d9c-8425-400f-bab9-bf882a65309e?Expires=1782751851&KeyName=labs-flow-prod-cdn-key&Signature=u7IBppdnTIggMb-FYxn1AH6OV_M"
+          src="https://res.cloudinary.com/dyzlx6pnt/video/upload/v1782761771/Character_looks_left_right_202606291152_qcaxxk.mp4"
           className="w-full h-full object-cover opacity-100"
           muted
           playsInline
