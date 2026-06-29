@@ -133,9 +133,13 @@ export default function ExplorationsSection() {
             ref={videoRef}
             className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
             src="https://res.cloudinary.com/dyzlx6pnt/video/upload/v1782747453/b_animate_the_image__l_online-video-cutter.com_kzs1f2.mp4"
+            autoPlay
             loop
             muted
             playsInline
+            onEnded={(e) => {
+              e.currentTarget.play().catch(() => {});
+            }}
           />
           {/* Seamless Edge Blenders placed directly inside the locked container for consistent blending */}
           <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" />
