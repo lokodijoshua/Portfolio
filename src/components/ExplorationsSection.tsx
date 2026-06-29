@@ -13,8 +13,10 @@ export default function ExplorationsSection() {
   const pinnedContentRef = useRef<HTMLDivElement | null>(null);
   const leftColRef = useRef<HTMLDivElement | null>(null);
   const rightColRef = useRef<HTMLDivElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const [activeItem, setActiveItem] = useState<Exploration | null>(null);
+  const [translateY, setTranslateY] = useState<number>(0);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -72,6 +74,51 @@ export default function ExplorationsSection() {
     };
   }, []);
 
+  // Parallax background video scroll event listener
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.playbackRate = 1.6;
+      videoRef.current.play().catch(() => {});
+    }
+
+    const handleScroll = () => {
+      const container = containerRef.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      const scrollY = window.scrollY;
+
+      // Check if container is in view
+      const inView = rect.top < window.innerHeight && rect.bottom > 0;
+      const relativeScroll = scrollY - container.offsetTop;
+
+      if (videoRef.current) {
+        if (relativeScroll > 5) {
+          // Pause/freeze playback when scrolling down into the section
+          if (!videoRef.current.paused) {
+            videoRef.current.pause();
+          }
+        } else {
+          // Play when at the start of the section or in view above scrolling threshold
+          if (videoRef.current.paused && inView) {
+            videoRef.current.playbackRate = 1.6;
+            videoRef.current.play().catch(() => {});
+          }
+        }
+      }
+
+      // Parallax translation: calculate distance relative to section's top offset and clamp to 0+
+      const activeScroll = Math.max(0, relativeScroll);
+      setTranslateY(-activeScroll * 0.85);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   const leftColumnItems = explorationsData.slice(0, 3);
   const rightColumnItems = explorationsData.slice(3, 6);
 
@@ -81,19 +128,41 @@ export default function ExplorationsSection() {
       ref={containerRef}
       className="relative min-h-[220vh] md:min-h-[300vh] bg-black w-full overflow-hidden select-none"
     >
+      {/* 100% Opacity Background Video with scrolling translation */}
+      <div
+        className="absolute top-0 left-0 w-full h-screen overflow-hidden z-0 pointer-events-none"
+        style={{
+          transform: `translateY(${translateY}px)`,
+          transition: "transform 0.1s ease-out",
+        }}
+      >
+        <video
+          ref={videoRef}
+          className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
+          src="https://res.cloudinary.com/dyzlx6pnt/video/upload/v1782747453/b_animate_the_image__l_online-video-cutter.com_kzs1f2.mp4"
+          loop
+          muted
+          playsInline
+        />
+      </div>
+
+      {/* Seamless Edge Blenders (Gradients fading to black at top and bottom edges) */}
+      <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
+
       {/* LAYER 1: Pinned Center (z-10) */}
       <div
         ref={pinnedContentRef}
         className="absolute inset-0 w-full h-screen flex flex-col justify-center items-center z-10 px-4 pointer-events-none"
       >
-        <div className="max-w-xl text-center flex flex-col items-center pointer-events-auto">
+        <div className="max-w-xl text-center flex flex-col items-center pointer-events-auto bg-black/45 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
           {/* Eyebrow */}
           <span className="text-xs text-white font-bold uppercase tracking-[0.3em] mb-4">
             Sandbox Archive
           </span>
 
           {/* Heading */}
-          <h2 className="text-5xl md:text-7xl font-display text-text-primary tracking-tight leading-tight mb-4">
+          <h2 className="text-5xl md:text-7xl font-display text-text-primary tracking-tight leading-tight mb-4 drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
             Visual <span className="italic font-normal">playground</span>
           </h2>
 
@@ -105,7 +174,7 @@ export default function ExplorationsSection() {
           {/* Dribbble Button - updated to beautiful glassy styling */}
           <a
             href="mailto:lokodijoshua@gmail.com"
-            className="liquid-glass group flex items-center gap-2 text-xs text-text-primary/90 rounded-full px-5 py-3 transition-opacity duration-300 hover:opacity-85"
+            className="liquid-glass group flex items-center gap-2 text-xs text-text-primary/90 rounded-full px-5 py-3 transition-opacity duration-300 hover:opacity-85 hover:shadow-[0_0_20px_rgba(255,255,255,0.4)]"
           >
             Inquire About Tech Stacks
             <ArrowUpRight className="w-3.5 h-3.5 text-muted group-hover:text-text-primary transition-colors" />

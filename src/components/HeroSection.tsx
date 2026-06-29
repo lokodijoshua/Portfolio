@@ -95,7 +95,7 @@ export default function HeroSection({
     <section
       id="home"
       ref={heroRef}
-      className="relative w-full h-screen flex flex-col justify-center items-start overflow-hidden bg-black text-text-primary px-6 md:px-12 lg:px-16"
+      className="relative w-full h-[100dvh] flex flex-col justify-center items-start overflow-hidden bg-black text-text-primary px-6 md:px-12 lg:px-16"
     >
       {/* 100% Opacity Background Video with scrolling translation */}
       <div
@@ -120,22 +120,22 @@ export default function HeroSection({
       <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
 
       {/* Hero Content */}
-      <div className="relative z-20 max-w-4xl text-left flex flex-col items-start select-none mt-12 mb-12 sm:mb-0 pb-12 sm:pb-0">
+      <div className="relative z-20 max-w-4xl text-left flex flex-col items-start select-none mt-16 sm:mt-0 pb-6 sm:pb-0">
         
         {/* Eyebrow - enhanced visibility */}
-        <span className="blur-in text-[10px] sm:text-xs text-white bg-black/55 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 font-bold uppercase tracking-[0.3em] mb-4 sm:mb-6 block font-body">
+        <span className="blur-in text-[10px] sm:text-xs text-white bg-black/55 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 font-bold uppercase tracking-[0.3em] mb-2 sm:mb-6 block font-body">
           SOFTWARE ENGINEER
         </span>
 
         {/* Name - enhanced visibility with solid shadow */}
-        <h1 className="name-reveal text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display italic leading-[0.95] tracking-tight text-white mb-4 sm:mb-6 select-none font-bold drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
+        <h1 className="name-reveal text-4xl xs:text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-display italic leading-[0.95] tracking-tight text-white mb-2 sm:mb-6 select-none font-bold drop-shadow-[0_4px_16px_rgba(0,0,0,0.9)]">
           Joshua M Lokodi
         </h1>
 
         {/* Role line - styled with liquid-glass to resonate with Navbar and match animation font */}
-        <div className="blur-in liquid-glass text-base sm:text-lg md:text-xl lg:text-2xl font-display italic font-bold text-white mb-4 sm:mb-6 flex items-center justify-start gap-2 h-10 sm:h-12 px-4 sm:px-5 rounded-full border border-white/20 select-none">
+        <div className="blur-in liquid-glass text-sm sm:text-lg md:text-xl lg:text-2xl font-display italic font-bold text-white mb-3 sm:mb-6 flex items-center justify-start gap-2 h-9 sm:h-12 px-3 sm:px-5 rounded-full border border-white/20 select-none">
           <span>A</span>
-          <div className="w-36 sm:w-40 md:w-48 text-left h-full flex items-center justify-start overflow-hidden">
+          <div className="w-28 xs:w-36 sm:w-40 md:w-48 text-left h-full flex items-center justify-start overflow-hidden">
             <span
               key={roleIndex}
               className="animate-role-fade-in inline-block font-display italic font-bold text-white"
@@ -147,7 +147,7 @@ export default function HeroSection({
         </div>
 
         {/* Description - styled with liquid-glass to resonate with Navbar and look super clear */}
-        <p className="blur-in liquid-glass text-xs md:text-sm text-white max-w-lg leading-relaxed mb-6 sm:mb-10 font-body p-4 sm:p-5 rounded-2xl font-normal shadow-xl border border-white/25">
+        <p className="blur-in liquid-glass text-xs md:text-sm text-white max-w-lg leading-relaxed mb-4 sm:mb-10 font-body p-3.5 sm:p-5 rounded-2xl font-normal shadow-xl border border-white/25">
           Building high-performance applications like e-commerce stores. Specialist in crafting secure back-end and front-end logic, and developing advanced AI workflows.
         </p>
 
@@ -157,7 +157,7 @@ export default function HeroSection({
           {/* See Works */}
           <button
             onClick={onSeeWorksClick}
-            className="liquid-glass-strong group relative rounded-full text-xs md:text-sm font-bold px-6 sm:px-8 py-3 sm:py-4 text-white cursor-pointer hover:opacity-100 hover:scale-[1.02] transition-all duration-300 tracking-wide border border-white/30 hover:shadow-[0_0_25px_rgba(255,255,255,0.7)] hover:border-white/80"
+            className="liquid-glass-strong group relative rounded-full text-xs md:text-sm font-bold px-6 sm:px-8 py-2.5 sm:py-4 text-white cursor-pointer hover:opacity-100 hover:scale-[1.02] transition-all duration-300 tracking-wide border border-white/30 hover:shadow-[0_0_25px_rgba(255,255,255,0.7)] hover:border-white/80"
           >
             <span className="relative z-10 drop-shadow-md">See Works</span>
           </button>
@@ -165,15 +165,15 @@ export default function HeroSection({
           {/* Reach out */}
           <button
             onClick={onContactClick}
-            className="liquid-glass group relative rounded-full text-xs md:text-sm font-bold px-6 sm:px-8 py-3 sm:py-4 text-white cursor-pointer hover:opacity-100 hover:scale-[1.02] transition-all duration-300 tracking-wide border border-white/30 hover:shadow-[0_0_25px_rgba(255,255,255,0.7)] hover:border-white/80"
+            className="liquid-glass group relative rounded-full text-xs md:text-sm font-bold px-6 sm:px-8 py-2.5 sm:py-4 text-white cursor-pointer hover:opacity-100 hover:scale-[1.02] transition-all duration-300 tracking-wide border border-white/30 hover:shadow-[0_0_25px_rgba(255,255,255,0.7)] hover:border-white/80"
           >
             <span className="relative z-10 drop-shadow-md">Reach out</span>
           </button>
         </div>
       </div>
 
-      {/* Scroll Indicator (Centered) */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 select-none pointer-events-none">
+      {/* Scroll Indicator (Centered) - hidden on mobile to avoid overlapping */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-2 select-none pointer-events-none">
         <span className="text-[10px] text-white font-black uppercase tracking-[0.2em] font-body drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
           SCROLL
         </span>

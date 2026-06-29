@@ -59,9 +59,9 @@ export default function SelectedWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ duration: 0.6, delay: (index % 4) * 0.05, ease: "easeOut" }}
-                className={`liquid-glass group relative rounded-3xl cursor-pointer p-8 flex flex-col justify-between transition-all duration-300 hover:opacity-90 hover:scale-[1.01] ${
+                className={`liquid-glass group relative rounded-3xl cursor-pointer p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:opacity-90 hover:scale-[1.01] ${
                   project.span === 7 ? "md:col-span-7" : "md:col-span-5"
-                } ${project.aspect} min-h-[300px]`}
+                } ${project.aspect} min-h-[280px] sm:min-h-[300px]`}
                 onClick={() => setSelectedProject(project)}
               >
                 {/* Accent glass shadow layer for subtle glow */}
@@ -73,31 +73,31 @@ export default function SelectedWorks() {
                 {/* Top Section */}
                 <div className="relative z-10 flex justify-between items-start w-full">
                   <div>
-                    <span className="text-[10px] text-white/90 uppercase tracking-[0.2em] font-mono font-bold block bg-white/5 px-2 py-0.5 rounded border border-white/10">
+                    <span className="text-[9px] sm:text-[10px] text-white/90 uppercase tracking-[0.2em] font-mono font-bold block bg-white/5 px-2 py-0.5 rounded border border-white/10">
                       {project.category}
                     </span>
                   </div>
-                  <span className="font-display italic text-2xl text-white/70 font-bold group-hover:text-white transition-colors">
+                  <span className="font-display italic text-xl sm:text-2xl text-white/70 font-bold group-hover:text-white transition-colors">
                     {displayIndex}
                   </span>
                 </div>
 
                 {/* Bottom Section */}
-                <div className="relative z-10 mt-auto pt-8 flex flex-col gap-4">
+                <div className="relative z-10 mt-auto pt-6 sm:pt-8 flex flex-col gap-3 sm:gap-4">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-display italic text-text-primary font-bold tracking-tight">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-display italic text-text-primary font-bold tracking-tight leading-tight">
                       {project.title}
                     </h3>
-                    <p className="text-xs md:text-sm text-white/85 mt-2 max-w-sm font-body font-normal leading-snug">
+                    <p className="text-[11px] sm:text-xs md:text-sm text-white/85 mt-1 sm:mt-2 max-w-sm font-body font-normal leading-snug">
                       {project.subtitle}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-1.5 pt-2">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5 pt-1 sm:pt-2">
                     {project.tags.map((t) => (
                       <span
                         key={t}
-                        className="text-[10px] text-white bg-white/10 border border-white/20 rounded-full px-2.5 py-0.5 font-mono font-semibold"
+                        className="text-[9px] sm:text-[10px] text-white bg-white/10 border border-white/20 rounded-full px-2 sm:px-2.5 py-0.5 font-mono font-semibold"
                       >
                         {t}
                       </span>
@@ -105,7 +105,7 @@ export default function SelectedWorks() {
                   </div>
 
                   {/* Glassy action indicator */}
-                  <div className="flex items-center gap-1.5 text-xs text-white mt-2 font-body font-bold">
+                  <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-white mt-1 sm:mt-2 font-body font-bold">
                     <span>View Project Spec</span>
                     <ArrowUpRight className="w-3.5 h-3.5 opacity-90 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                   </div>
