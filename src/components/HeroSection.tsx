@@ -29,7 +29,20 @@ export default function HeroSection({
     if (videoRef.current) {
       videoRef.current.muted = true;
       videoRef.current.playbackRate = 1.6; // Video plays a bit fast
-      videoRef.current.play().catch(() => {});
+      videoRef.current.play().catch((err) => {
+        console.warn("Hero video play blocked initially, retrying playing:", err);
+        // Play on touch or click as fallback
+        const playOnInteraction = () => {
+          if (videoRef.current) {
+            videoRef.current.playbackRate = 1.6;
+            videoRef.current.play().catch(() => {});
+          }
+          window.removeEventListener("touchstart", playOnInteraction);
+          window.removeEventListener("click", playOnInteraction);
+        };
+        window.addEventListener("touchstart", playOnInteraction, { passive: true });
+        window.addEventListener("click", playOnInteraction, { passive: true });
+      });
     }
 
     const handleScroll = () => {
@@ -103,6 +116,7 @@ export default function HeroSection({
           playsInline
           autoPlay
           loop
+          preload="auto"
         />
       </div>
 

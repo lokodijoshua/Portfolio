@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 interface LoadingScreenProps {
@@ -10,9 +10,28 @@ const WORDS = ["Develop", "Optimize", "Scale", "Secure", "Deploy"];
 export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
   const [count, setCount] = useState<number>(0);
   const [wordIndex, setWordIndex] = useState<number>(0);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Programmatically force background video to start playing immediately on mount
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true;
+      videoRef.current.play().catch((err) => {
+        console.warn("Loading video play blocked initially, retrying playing:", err);
+        // Play on document/body interaction just in case
+        const playOnInteraction = () => {
+          videoRef.current?.play().catch(() => {});
+          window.removeEventListener("touchstart", playOnInteraction);
+          window.removeEventListener("click", playOnInteraction);
+        };
+        window.addEventListener("touchstart", playOnInteraction, { passive: true });
+        window.addEventListener("click", playOnInteraction, { passive: true });
+      });
+    }
+  }, []);
 
   useEffect(() => {
-    const totalDuration = 15000; // 15 seconds in milliseconds
+    const totalDuration = 10000; // Exactly 10 seconds in milliseconds
     let startTime: number | null = null;
     let animationFrameId: number;
 
@@ -20,27 +39,16 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       if (!startTime) startTime = timestamp;
       const elapsed = timestamp - startTime;
       
-      let currentCount = 0;
-      if (elapsed <= 5000) {
-        // Phase 1: 0 to 5 seconds -> counts 0 to 85
-        const progress = elapsed / 5000;
-        currentCount = Math.floor(progress * 85);
-      } else if (elapsed <= 14000) {
-        // Phase 2: 5 to 14 seconds -> counts 85 to 97
-        const progress = (elapsed - 5000) / 9000;
-        currentCount = Math.floor(85 + progress * (97 - 85));
-      } else {
-        // Phase 3: 14 to 15 seconds -> counts 97 to 100
-        const progress = Math.min(1, (elapsed - 14000) / 1000);
-        currentCount = Math.floor(97 + progress * (100 - 97));
-      }
+      // Count smoothly from 0 to 100 straight up over 10 seconds
+      const progress = Math.min(1, elapsed / totalDuration);
+      const currentCount = Math.floor(progress * 100);
 
       // Ensure count is bounded correctly
       const finalCount = Math.min(100, Math.max(0, currentCount));
       setCount(finalCount);
 
-      // Cycle words continuously every 3000ms throughout the 15 seconds
-      const currentWordIndex = Math.floor(elapsed / 3000) % WORDS.length;
+      // Cycle words continuously every 2000ms throughout the 10 seconds
+      const currentWordIndex = Math.floor(elapsed / 2000) % WORDS.length;
       setWordIndex(currentWordIndex);
 
       if (elapsed < totalDuration) {
@@ -65,12 +73,14 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       {/* Background Video */}
       <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none">
         <video
+          ref={videoRef}
           className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-100"
           src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260417_061226_74f0749c-a22d-42b3-895e-5d6203bc741c.mp4"
           autoPlay
           loop
           muted
           playsInline
+          preload="auto"
         />
       </div>
 
