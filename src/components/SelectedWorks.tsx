@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { projectsData } from "../data";
 import { Project } from "../types";
 import { ArrowRight, ArrowUpRight, X } from "lucide-react";
+import DesktopCardDeck from "./DesktopCardDeck";
 
 export default function SelectedWorks() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
@@ -48,72 +49,116 @@ export default function SelectedWorks() {
           </button>
         </motion.div>
 
-        {/* Bento Grid - 11 Projects styled as premium liquid-glass cards with zero images */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 md:gap-6">
+        {/* Sliding Stack Horizontal Card Deck for Desktop / tablet, Vertical cards for Mobile */}
+        
+        {/* Mobile Layout (sm/md screen size): Vertical elegant cards with matching styles */}
+        <div className="flex flex-col gap-6 md:hidden">
           {projectsData.map((project, index) => {
+            const style = [
+              {
+                bg: "bg-gradient-to-br from-[#FF5500] to-[#E63900] text-black border-[#ff6611]/30",
+                textTitle: "text-neutral-950",
+                textSub: "text-neutral-900/95",
+                tagBg: "bg-black/10 text-neutral-950 border-black/10 font-bold",
+                categoryBg: "bg-black/10 text-neutral-950 border-black/10 font-bold",
+                indexColor: "text-black/30",
+                wireframeColor: "stroke-black/15",
+              },
+              {
+                bg: "bg-gradient-to-br from-[#F5F5F7] to-[#E5E5EA] text-black border-white/60",
+                textTitle: "text-neutral-950",
+                textSub: "text-neutral-800",
+                tagBg: "bg-black/5 text-neutral-950 border-black/10 font-bold",
+                categoryBg: "bg-black/5 text-neutral-950 border-black/10 font-bold",
+                indexColor: "text-black/25",
+                wireframeColor: "stroke-neutral-800/15",
+              },
+              {
+                bg: "bg-gradient-to-br from-[#1C1C1E] to-[#121214] text-white border-white/10",
+                textTitle: "text-text-primary",
+                textSub: "text-muted",
+                tagBg: "bg-white/10 text-white border-white/10 font-bold",
+                categoryBg: "bg-white/10 text-white border-white/10 font-bold",
+                indexColor: "text-white/20",
+                wireframeColor: "stroke-white/15",
+              },
+              {
+                bg: "bg-gradient-to-br from-[#0B0B0C] to-[#050506] text-white border-white/10",
+                textTitle: "text-text-primary",
+                textSub: "text-muted",
+                tagBg: "bg-white/10 text-white border-white/10 font-bold",
+                categoryBg: "bg-white/10 text-white border-white/10 font-bold",
+                indexColor: "text-white/20",
+                wireframeColor: "stroke-white/20",
+              },
+            ][index % 4];
+
             const displayIndex = (index + 1).toString().padStart(2, "0");
+
             return (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-50px" }}
-                transition={{ duration: 0.6, delay: (index % 4) * 0.05, ease: "easeOut" }}
-                className={`liquid-glass group relative rounded-3xl cursor-pointer p-6 sm:p-8 flex flex-col justify-between transition-all duration-300 hover:opacity-90 hover:scale-[1.01] ${
-                  project.span === 7 ? "md:col-span-7" : "md:col-span-5"
-                } ${project.aspect} min-h-[280px] sm:min-h-[300px]`}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 onClick={() => setSelectedProject(project)}
+                className={`relative rounded-[2rem] p-6 flex flex-col justify-between min-h-[290px] border shadow-lg overflow-hidden cursor-pointer group ${style.bg}`}
               >
-                {/* Accent glass shadow layer for subtle glow */}
-                <div className="absolute inset-0 bg-white/[0.01] group-hover:bg-white/[0.03] transition-colors duration-300 z-0" />
-                
-                {/* Halftone texture overlay for physical feel */}
-                <div className="absolute inset-0 halftone-overlay opacity-[0.03] pointer-events-none z-0" />
+                {/* Accent wireframe background element in card */}
+                <div className="absolute right-[-20px] bottom-[-20px] opacity-35 pointer-events-none scale-90">
+                  <svg viewBox="0 0 200 200" className={`w-36 h-36 animate-[spin_12s_linear_infinite] ${style.wireframeColor}`}>
+                    <ellipse cx="100" cy="100" rx="80" ry="25" fill="none" strokeWidth="1" className="transform rotate-[0deg]" style={{ transformOrigin: "100px 100px" }} />
+                    <ellipse cx="100" cy="100" rx="80" ry="25" fill="none" strokeWidth="1" className="transform rotate-[30deg]" style={{ transformOrigin: "100px 100px" }} />
+                    <ellipse cx="100" cy="100" rx="80" ry="25" fill="none" strokeWidth="1" className="transform rotate-[60deg]" style={{ transformOrigin: "100px 100px" }} />
+                    <ellipse cx="100" cy="100" rx="80" ry="25" fill="none" strokeWidth="1" className="transform rotate-[90deg]" style={{ transformOrigin: "100px 100px" }} />
+                    <ellipse cx="100" cy="100" rx="80" ry="25" fill="none" strokeWidth="1" className="transform rotate-[120deg]" style={{ transformOrigin: "100px 100px" }} />
+                    <ellipse cx="100" cy="100" rx="80" ry="25" fill="none" strokeWidth="1" className="transform rotate-[150deg]" style={{ transformOrigin: "100px 100px" }} />
+                  </svg>
+                </div>
 
-                {/* Top Section */}
-                <div className="relative z-10 flex justify-between items-start w-full">
-                  <div>
-                    <span className="text-[9px] sm:text-[10px] text-white/90 uppercase tracking-[0.2em] font-mono font-bold block bg-white/5 px-2 py-0.5 rounded border border-white/10">
-                      {project.category}
-                    </span>
-                  </div>
-                  <span className="font-display italic text-xl sm:text-2xl text-white/70 font-bold group-hover:text-white transition-colors">
+                {/* Top Row */}
+                <div className="flex justify-between items-start w-full relative z-10">
+                  <span className={`text-[9px] uppercase tracking-[0.2em] font-mono font-bold block px-2.5 py-1 rounded-full border ${style.categoryBg}`}>
+                    {project.category}
+                  </span>
+                  <span className={`font-display italic text-xl font-bold ${style.indexColor}`}>
                     {displayIndex}
                   </span>
                 </div>
 
-                {/* Bottom Section */}
-                <div className="relative z-10 mt-auto pt-6 sm:pt-8 flex flex-col gap-3 sm:gap-4">
-                  <div>
-                    <h3 className="text-xl sm:text-2xl md:text-3xl font-display italic text-text-primary font-bold tracking-tight leading-tight">
-                      {project.title}
-                    </h3>
-                    <p className="text-[11px] sm:text-xs md:text-sm text-white/85 mt-1 sm:mt-2 max-w-sm font-body font-normal leading-snug">
-                      {project.subtitle}
-                    </p>
-                  </div>
+                {/* Info Area */}
+                <div className="mt-auto relative z-10 pt-8">
+                  <h3 className={`text-xl font-display italic font-bold tracking-tight leading-tight ${style.textTitle}`}>
+                    {project.title}
+                  </h3>
+                  <p className={`text-xs mt-1.5 max-w-xs font-body font-normal leading-relaxed ${style.textSub}`}>
+                    {project.subtitle}
+                  </p>
 
-                  <div className="flex flex-wrap gap-1 sm:gap-1.5 pt-1 sm:pt-2">
+                  <div className="flex flex-wrap gap-1.5 pt-4">
                     {project.tags.map((t) => (
                       <span
                         key={t}
-                        className="text-[9px] sm:text-[10px] text-white bg-white/10 border border-white/20 rounded-full px-2 sm:px-2.5 py-0.5 font-mono font-semibold"
+                        className={`text-[9px] rounded-full px-2.5 py-0.5 font-mono font-semibold border ${style.tagBg}`}
                       >
                         {t}
                       </span>
                     ))}
                   </div>
 
-                  {/* Glassy action indicator */}
-                  <div className="flex items-center gap-1.5 text-[11px] sm:text-xs text-white mt-1 sm:mt-2 font-body font-bold">
+                  <div className="flex items-center gap-1.5 text-xs mt-4 font-body font-bold">
                     <span>View Project Spec</span>
-                    <ArrowUpRight className="w-3.5 h-3.5 opacity-90 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                    <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </div>
                 </div>
               </motion.div>
             );
           })}
         </div>
+
+        {/* Desktop Sliding Overlapping Card Deck Layout (md and larger screens) */}
+        <DesktopCardDeck onProjectClick={setSelectedProject} />
       </div>
 
       {/* Project Detail Modal */}

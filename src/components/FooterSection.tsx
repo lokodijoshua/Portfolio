@@ -17,8 +17,49 @@ export default function FooterSection() {
       repeat: -1,
     });
 
+    // Dynamic viewport-center highlighting loop for mobile & desktop
+    let rafId: number;
+    const updateHighlights = () => {
+      const items = marquee.querySelectorAll(".marquee-item");
+      const parentElement = marquee.parentElement;
+      if (parentElement) {
+        const rect = parentElement.getBoundingClientRect();
+        const centerX = rect.left + rect.width / 2;
+
+        let closestItem: Element | null = null;
+        let minDistance = Infinity;
+
+        items.forEach((item) => {
+          const itemRect = item.getBoundingClientRect();
+          const itemCenter = itemRect.left + itemRect.width / 2;
+          const distance = Math.abs(itemCenter - centerX);
+
+          if (distance < minDistance) {
+            minDistance = distance;
+            closestItem = item;
+          }
+        });
+
+        items.forEach((item) => {
+          if (item === closestItem) {
+            // Apply dimmed white color to mimic active hover in the middle
+            item.classList.add("text-white/80", "scale-105", "opacity-100", "font-black");
+            item.classList.remove("text-text-primary/10", "scale-95", "opacity-30");
+          } else {
+            // Revert to dim, elegantly integrated ambient look
+            item.classList.add("text-text-primary/10", "scale-95", "opacity-30");
+            item.classList.remove("text-white/80", "scale-105", "opacity-100", "font-black");
+          }
+        });
+      }
+      rafId = requestAnimationFrame(updateHighlights);
+    };
+
+    rafId = requestAnimationFrame(updateHighlights);
+
     return () => {
       anim.kill();
+      cancelAnimationFrame(rafId);
     };
   }, []);
 
@@ -75,7 +116,7 @@ export default function FooterSection() {
                 .map((text, i) => (
                   <span
                     key={`orig-${i}`}
-                    className="text-text-primary/5 hover:text-text-primary/25 transition-colors duration-500 cursor-default"
+                    className="marquee-item text-text-primary/10 transition-all duration-500 ease-out cursor-default scale-95"
                   >
                     {text}
                   </span>
@@ -88,7 +129,7 @@ export default function FooterSection() {
                 .map((text, i) => (
                   <span
                     key={`dup-${i}`}
-                    className="text-text-primary/5 hover:text-text-primary/25 transition-colors duration-500 cursor-default"
+                    className="marquee-item text-text-primary/10 transition-all duration-500 ease-out cursor-default scale-95"
                   >
                     {text}
                   </span>
@@ -128,7 +169,7 @@ export default function FooterSection() {
 
           {/* Copyright signature */}
           <div className="text-xs font-mono text-muted/60">
-            © 2026 Joshua M Lokodi. All rights reserved.
+            © 2026 Joshua Lokodi. All rights reserved.
           </div>
 
         </div>
