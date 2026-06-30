@@ -34,32 +34,32 @@ export default function ExplorationsSection() {
       pinSpacing: false,
     });
 
-    // Parallax left column (moving upwards faster)
+    // Scroll trigger for left column to scroll completely out of view during the pin
     const leftParallax = gsap.fromTo(
       leftCol,
-      { y: 150 },
+      { y: window.innerHeight * 0.8 },
       {
-        y: -150,
+        y: () => -(leftCol.offsetHeight + window.innerHeight * 0.2),
         scrollTrigger: {
           trigger: container,
-          start: "top bottom",
-          end: "bottom top",
+          start: "top top",
+          end: "bottom bottom",
           scrub: 1,
         },
       }
     );
 
-    // Parallax right column (moving upwards slower or offset)
+    // Scroll trigger for right column to scroll completely out of view during the pin (staggered slightly)
     const rightParallax = gsap.fromTo(
       rightCol,
-      { y: -100 },
+      { y: window.innerHeight * 1.0 },
       {
-        y: 200,
+        y: () => -(rightCol.offsetHeight + window.innerHeight * 0.2),
         scrollTrigger: {
           trigger: container,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 1.5,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: 1.2,
         },
       }
     );
@@ -114,37 +114,25 @@ export default function ExplorationsSection() {
     <section
       id="explorations"
       ref={containerRef}
-      className="relative min-h-[220vh] md:min-h-[300vh] bg-black w-full overflow-hidden select-none"
+      className="relative min-h-[140vh] md:min-h-[160vh] bg-black w-full overflow-hidden select-none"
     >
       {/* LAYER 1: Pinned Center (z-10) with locked background video and pop-up transition reveal */}
       <div
         ref={pinnedContentRef}
         className="absolute inset-0 w-full h-screen flex flex-col justify-center items-center z-10 px-4 pointer-events-none"
       >
-        {/* locked video container with pop-up transition reveal effect */}
-        <motion.div
-          initial={{ scale: 0.82, opacity: 0, borderRadius: "2.5rem" }}
-          whileInView={{ scale: 1, opacity: 1, borderRadius: "0rem" }}
-          viewport={{ once: false, margin: "-8% 0px -8% 0px" }}
-          transition={{ type: "spring", stiffness: 60, damping: 18 }}
-          className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none"
-        >
+        {/* locked video container with autoplay and muted, pop-up transition removed */}
+        <div className="absolute inset-0 w-full h-full overflow-hidden z-0 pointer-events-none bg-black">
           <video
             ref={videoRef}
-            className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover"
+            className="absolute top-1/2 left-1/2 min-w-full min-h-full -translate-x-1/2 -translate-y-1/2 object-cover opacity-100"
             src="https://res.cloudinary.com/dyzlx6pnt/video/upload/v1782747453/b_animate_the_image__l_online-video-cutter.com_kzs1f2.mp4"
             autoPlay
             loop
             muted
             playsInline
-            onEnded={(e) => {
-              e.currentTarget.play().catch(() => {});
-            }}
           />
-          {/* Seamless Edge Blenders placed directly inside the locked container for consistent blending */}
-          <div className="absolute top-0 left-0 right-0 h-48 bg-gradient-to-b from-black to-transparent z-10 pointer-events-none" />
-          <div className="absolute bottom-0 left-0 right-0 h-48 bg-gradient-to-t from-black to-transparent z-10 pointer-events-none" />
-        </motion.div>
+        </div>
 
         <div className="relative z-10 max-w-xl text-center flex flex-col items-center pointer-events-auto bg-black/45 backdrop-blur-md p-8 md:p-10 rounded-3xl border border-white/20 shadow-2xl">
           {/* Eyebrow */}
